@@ -68,6 +68,8 @@ This is a legal question-answering system that utilizes LangChain to process and
 
 5. Manipulate the prompt to refine or change the responses.
 
+6. Replace the documents in `./context/` with those relevant to your legal department or country.
+
 ## Contributing
 
 Feel free to submit issues or pull requests if you have suggestions or improvements.
