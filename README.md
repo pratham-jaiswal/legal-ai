@@ -51,7 +51,7 @@ This is a legal question-answering system that utilizes LangChain to process and
 > You should have at least 8 GB of RAM available to run the 7B models, 16 GB to run the 13B models, and 32 GB to run the 33B models. [Source](https://github.com/ollama/ollama?tab=readme-ov-file#model-library).</br>
 > Phi3.5 is a 3B model, and I'm on a 8GB RAM i5 9th gen 4 year old laptop, and it takes about 10 mintues to create a vector db with around 4.8 chunks of context data, and 2-5 mins to answer a query.
 
-2. Use different chunking methods <sup>[1](https://python.langchain.com/v0.2/docs/how_to/#text-splitters)</sup> <sup>[2](https://blog.lancedb.com/chunking-techniques-with-langchain-and-llamaindex/)</sup>. or parameters. For example,
+2. Use different chunking methods <sup>[1](https://python.langchain.com/v0.2/docs/how_to/#text-splitters)</sup> <sup>[2](https://blog.lancedb.com/chunking-techniques-with-langchain-and-llamaindex/)</sup>, or parameters. For example,
     ```py
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=70)
     ```
