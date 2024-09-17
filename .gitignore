@@ -3,3 +3,4 @@ main.py
 .venv
 cache.pkl
 .env
+main.ipynb
