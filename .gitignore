@@ -2,3 +2,4 @@
 main.py
 .venv
 cache.pkl
+.env
