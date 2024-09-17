@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            Legal AI
+        </div>
+        <div class="chat-box" id="chat-box"></div>
+        <div class="chat-input">
+            <textarea id="question" rows="2" placeholder="Type your question..."></textarea>
+            <button id="send-btn"><ion-icon name="send-sharp"></ion-icon></button>
+        </div>
+    </div>
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <script>
+        const chatBox = document.getElementById('chat-box');
+        const questionInput = document.getElementById('question');
+        const sendButton = document.getElementById('send-btn');
+
+        sendButton.addEventListener('click', async function() {
+            const question = questionInput.value;
+            if (!question.trim()) return;
+
+            const userMessage = document.createElement('div');
+            userMessage.classList.add('message', 'user');
+            userMessage.innerHTML = `<p>${question}</p>`;
+            chatBox.appendChild(userMessage);
+            questionInput.value = '';
+
+            const response = await fetch('/ask', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ question })
+            });
+
+            const result = await response.json();
+            const botMessage = result.response;
+
+            const botMessageElement = document.createElement('div');
+            botMessageElement.classList.add('message', 'bot');
+            botMessageElement.innerHTML = `<p>${botMessage}</p>`;
+            chatBox.appendChild(botMessageElement);
+
+            chatBox.scrollTop = chatBox.scrollHeight;
+        });
+    </script>
+</body>
+</html>
