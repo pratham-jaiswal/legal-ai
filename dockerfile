@@ -2,11 +2,11 @@ FROM python:3.12-slim AS builder
 
 WORKDIR /app
 
-RUN apt-get update && \
-    apt-get install -y \
-    g++ \
+RUN apt-get update && apt-get install -y \
+    sqlite3 \
+    libsqlite3-dev \
     build-essential \
-    && rm -rf /var/lib/apt/lists/*
+    gcc
 
 RUN python3 -m venv venv
 ENV VIRTUAL_ENV=/app/venv
