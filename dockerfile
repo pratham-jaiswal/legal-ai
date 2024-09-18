@@ -6,7 +6,8 @@ RUN apt-get update && apt-get install -y \
     sqlite3 \
     libsqlite3-dev \
     build-essential \
-    gcc
+    gcc \
+    wget
 
 RUN python3 -m venv venv
 ENV VIRTUAL_ENV=/app/venv
