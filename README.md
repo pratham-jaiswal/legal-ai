@@ -5,6 +5,8 @@ This is a legal question-answering system that utilizes LangChain to process and
 > [!NOTE]
 > The retrieval-augmented generation (RAG) model utilized is tailored to the Indian legal context.
 
+***Visit the [flask](https://github.com/pratham-jaiswal/legal-ai/tree/flask) branch for the flask app.***
+
 ## Context Documents Used:
 - The Bharatiya Nyaya Sanhita, 2023 - *./context/250883_english_01042024.pdf*
 - The Constitution of India, 2024 - *./context/20240716890312078.pdf*
@@ -15,24 +17,45 @@ This is a legal question-answering system that utilizes LangChain to process and
 
 ## Getting Started
 
-1. Clone the repository
+1. Clone the repository:
     ```sh
     git clone https://github.com/pratham-jaiswal/legal-ai.git
     ```
-2. Install the required libraries
+
+2. Install the required libraries:
     ```sh
     pip install -r requirements.txt
     ```
-3. Download and install [Ollama](https://ollama.com/download)
-4. Run Ollama
+
+3. **Choose your LLM setup**:
+   
+    - **Local LLM (Ollama)**: Download and install [Ollama](https://ollama.com/download)
+   
+    - **LLM Providers (OpenAI, Cohere, Anthropic, etc.)**: Obtain the API key from your preferred provider:
+        - [OpenAI](https://platform.openai.com/api-keys)
+        - [Cohere](https://dashboard.cohere.com/api-keys)
+        - [Anthropic](https://console.anthropic.com/settings/keys)
+        - [Any other supported ones](https://python.langchain.com/docs/integrations/chat/)
+
+        Create a `.env` file to store the API key as shown below. You can skip steps **4** and **5** if using an API key:
+        ```env
+        COHERE_API_KEY=Your-api-key
+        ```
+
+> [!NOTE]
+> LLM providers may charge a fee. Cohere offers a free "Trial Key".
+
+4. Start Ollama (*Not needed when using a LLM provider*)
     ```sh
     ollama serve
     ```
-5. Pull the required model(s) from Ollama (here `phi3.5`). Refer to [Ollama library](https://ollama.com/library) for more models.
+
+5. Pull the required model(s) from Ollama (e.g., `phi3.5`). You can explore other models from the [Ollama library](https://ollama.com/library). (*Not needed when using a LLM provider*)
     ```sh
     ollama pull phi3.5
     ```
-6. Run the `main.ipynb` file.
+
+6. Run the `main.ipynb` file to start your project.
 
 ## Changes you can make
 
@@ -45,7 +68,10 @@ This is a legal question-answering system that utilizes LangChain to process and
     llm = Ollama(model="llama3.1:8b")
     ```
 
-    You can also use OpenAI, IBM WAtsonX or any other LLM - Ollama is just free and can be pulled to be used locally.
+    You can also use OpenAI, Cohere, Anthropic, or any other LLM - Ollama is just free and can be pulled to be used locally.
+    ```py
+    llm = ChatCohere(model="command-r")
+    ```
 
 > [!NOTE]
 > You should have at least 8 GB of RAM available to run the 7B models, 16 GB to run the 13B models, and 32 GB to run the 33B models. [Source](https://github.com/ollama/ollama?tab=readme-ov-file#model-library).</br>
