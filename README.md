@@ -5,8 +5,6 @@ This is a legal question-answering system that utilizes LangChain to process and
 > [!NOTE]
 > The retrieval-augmented generation (RAG) model utilized is tailored to the Indian legal context.
 
-***Visit the [flask](https://github.com/pratham-jaiswal/legal-ai/tree/flask) branch for the flask app.***
-
 ## Context Documents Used:
 - The Bharatiya Nyaya Sanhita, 2023 - *./context/250883_english_01042024.pdf*
 - The Constitution of India, 2024 - *./context/20240716890312078.pdf*
