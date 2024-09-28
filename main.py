@@ -154,20 +154,23 @@ def fnAsk():
             st.markdown(message["content"])
 
     # Get user input
-    if user_query := st.chat_input("Ask a legal question"):
-        # Append user's question to the chat history
-        st.session_state.messages.append({"role": "user", "content": user_query})
-        with st.chat_message("user"):
-            st.markdown(user_query)
-
-        # Process the query using the QA chain
-        result = st.session_state.qa.invoke(user_query)
-        bot_response = result["result"]
-
-        # Append bot's response to the chat history
-        st.session_state.messages.append({"role": "assistant", "content": bot_response})
-        with st.chat_message("assistant"):
-            st.markdown(bot_response)
+    if st.session_state.get('is_processing', False):
+        st.chat_input("Waiting for response...", disabled=True)
+    else:
+        if user_query := st.chat_input("Ask a legal question"):
+            # Append user's question to the chat history
+            st.session_state.messages.append({"role": "user", "content": user_query})
+            with st.chat_message("user"):
+                st.markdown(user_query)
+            st.session_state.is_processing = True
+            # Process the query using the QA chain
+            result = st.session_state.qa.invoke(user_query)
+            bot_response = result["result"]
+            # Append bot's response to the chat history
+            st.session_state.messages.append({"role": "assistant", "content": bot_response})
+            with st.chat_message("assistant"):
+                st.markdown(bot_response)
+            st.session_state.is_processing = False
 
 if __name__ == "__main__":
     fnAsk()
