@@ -19,7 +19,7 @@ from streamlit import logger
 import sqlite3
 
 app_logger = logger.get_logger ('SMI_APP' )
-app_logger.info(f"Sqlite version: {sglite3.sqlite_version}")
+app_logger.info(f"Sqlite version: {sqlite3.sqlite_version}")
 app_logger.info(f"Sys version: {sys.version}")
 
 # Suppress warnings
