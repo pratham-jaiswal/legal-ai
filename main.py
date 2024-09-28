@@ -29,7 +29,7 @@ warnings.filterwarnings('ignore')
 # Load environment variables
 load_dotenv()
 
-# Initialize Streamlit app
+st.set_page_config(page_title="Legal AI Catbot")
 st.title("Legal Chatbot")
 
 # Initialize session state for storing chat history and app components
