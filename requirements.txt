@@ -6,3 +6,4 @@ langchain_text_splitters==0.3.0
 streamlit==1.38.0
 protobuf==3.20.*
 pysqlite3-binary
+langchain-cohere==0.3.0
