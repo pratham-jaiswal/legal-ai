@@ -37,6 +37,13 @@
             chatBox.appendChild(userMessage);
             questionInput.value = '';
 
+            const thinkingMessage = document.createElement('div');
+            thinkingMessage.classList.add('message', 'bot');
+            thinkingMessage.innerHTML = `<p>Thinking...</p>`;
+            chatBox.appendChild(thinkingMessage);
+
+            chatBox.scrollTop = chatBox.scrollHeight;
+
             const response = await fetch('/ask', {
                 method: 'POST',
                 headers: {
@@ -47,6 +54,8 @@
 
             const result = await response.json();
             const botMessage = result.response;
+
+            chatBox.removeChild(thinkingMessage);
 
             const botMessageElement = document.createElement('div');
             botMessageElement.classList.add('message', 'bot');
