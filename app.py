@@ -10,10 +10,10 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_chroma import Chroma
 # from langchain_ollama import ChatOllama
 from langchain_cohere import ChatCohere
-from langchain.chains import RetrievalQA
-from langchain_core.prompts import PromptTemplate
+from langchain_core.runnables import RunnablePassthrough
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.messages import HumanMessage, AIMessage
 from langchain_community.embeddings.sentence_transformer import SentenceTransformerEmbeddings
-from langchain.memory import ConversationBufferMemory
 import pickle
 from flask import Flask, request, render_template, jsonify
 from dotenv import load_dotenv
@@ -64,40 +64,30 @@ else: # No Vector store found, create one
 # llm = ChatOllama(model="phi3.5", temperature=0.5, repeat_penalty=1.5, verbose=False)
 llm = ChatCohere(model="command-r-08-2024", temperature=0.5)
 
-prompt_template = """
-    You are an AI lawyer specializing in Indian law.\
-    Your role is to provide clear, concise, and accurate legal advice based solely on the information from the provided documents and prior conversations with the user.\
-    You must always respond as a legal expert and avoid disclaiming your expertise.\
-    If an answer is unknown, simply state that and refrain from speculation.\
-    Cite relevant law sections, acts, or provisions in your response.\
-    Note: The developer has provided the legal documents, not the user.\
+system_prompt = """
+        You are an AI lawyer specializing in Indian law.
+        Your role is to provide clear, concise, and accurate legal advice based solely on the information from the provided documents and prior conversations with the user.
+        You must always respond as a legal expert and avoid disclaiming your expertise.
+        If an answer is unknown, simply state that and refrain from speculation.
+        Cite relevant law sections, acts, or provisions in your response.
+        Note: The developer has provided the legal documents, not the user.
 
-Previous conversations:
-{history}
+        Previous conversations:
+        {history}
 
-Document context:
-{context}
+        Document context:
+        {context}
+    """
 
-Question: {question}
-"""
+qa_prompt = ChatPromptTemplate.from_messages(
+        [
+            ("system", system_prompt),
+            ("human", "{input}"),
+        ]
+    )
 
-prompt = PromptTemplate(
-    template=prompt_template, input_variables=["history", "context", "question"]
-)
-
-# Create QA chain
-qa = RetrievalQA.from_chain_type(
-    llm=llm,
-    chain_type="stuff",
-    retriever=vectorstore.as_retriever(),
-    chain_type_kwargs={
-        "prompt": prompt,
-        "memory": ConversationBufferMemory(
-            memory_key="history",
-            input_key="question"),
-    },
-    return_source_documents=False
-)
+retriever = vectorstore.as_retriever()
+history = []
 
 # Routes
 @app.route('/')
@@ -107,16 +97,31 @@ def home():
 @app.route('/ask', methods=['POST'])
 def ask():
     data = request.json
-    question = data.get('question', '')
+    query = data.get('question', '')
 
-    if question.lower() in ["quit", "exit", "bye"]:
+    if query.lower() in ["quit", "exit", "bye"]:
         return jsonify({"response": "Goodbye!"})
 
-    # Run the QA chain with the input query
-    result = qa.invoke(question)
-    response = result["result"]
+    history.append({"role": "user", "content": HumanMessage(content=query)})
+
+    if query:
+        relevant_docs = retriever.invoke(query)
+        context_documents_str = "\n\n".join(doc.page_content for doc in relevant_docs)
+    else:
+        context_documents_str = ""
+
+    qa_prompt_local  = qa_prompt.partial(
+        history=history,
+        context=context_documents_str
+    )
+
+    llm_chain = { "input": RunnablePassthrough() } | qa_prompt_local  | llm
+
+    result = llm_chain.invoke(query)
+
+    history.append({"role": "assistant", "content": AIMessage(content=result.content)})
     
-    return jsonify({"response": response})
+    return jsonify({"response": result.content})
 
 if __name__ == '__main__':
     app.run(debug=True)
