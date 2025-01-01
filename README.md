@@ -15,6 +15,8 @@ This is a legal question-answering system that utilizes LangChain to process and
 > [!NOTE]
 > The document "Indian Polity by M. Laxmikanth, 7th Edition" is referenced for context but is not included in this repository. To recreate the Embedding Vector DB and use this file, you need to acquire it separately and place it in the `./context/` directory. Alternatively, you can use the provided `./chroma_db/`, which includes this document.
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pratham-jaiswal/legal-ai/blob/main/main.ipynb "Open in Colab")
+
 ## Getting Started
 
 1. Clone the repository:
